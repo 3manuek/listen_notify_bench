@@ -1,4 +1,4 @@
-package main
+package shared
 
 // https://github.com/heroku-examples/go-queue-example/blob/master/cmd/queue-example-worker/main.go
 
