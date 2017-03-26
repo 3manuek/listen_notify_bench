@@ -1,0 +1,52 @@
+/*
+[connectionURI]
+
+  # You can indent as you please. Tabs or spaces. TOML don't care.
+  [connectionURI.9060]
+  url = "postgres://jack:secret@localhost:5432/mydb?sslmode=prefer1"
+  
+  [connectionURI.1000]
+  url = "postgres://jack:secret@localhost:5432/mydb?sslmode=prefer1"
+
+
+export DATABASE_URL1="postgres://emanuel:emanuel@localhost:6666/emanuel"
+export DATABASE_URL2="postgres://emanuel:emanuel@localhost:5495/emanuel"
+*/
+
+type ConfFile struct {
+	connectionURI map[string]url
+}
+
+type url struct{
+	url 	string 
+}
+
+
+// hardcoded:
+urls := []struct {
+		url        string
+	}{
+		{
+			url: "postgres://jack:secret@localhost:5432/mydb?sslmode=prefer",
+		},
+		{
+			url: "postgres://jack:secret@localhost:5432/mydb?sslmode=disable",
+		},
+	}
+
+var conf ConfFile
+if _, err := toml.Decode(tomlData, &conf); err != nil {
+  // handle error
+}
+
+for i, tt := range conf.connectionURI {
+		connParams, err := pgx.ParseURI(tt.url)
+		if err != nil {
+			t.Errorf("%d. Unexpected error from pgx.ParseURL(%q) => %v", i, tt.url, err)
+			continue
+		}
+
+		if !reflect.DeepEqual(connParams, tt.connParams) {
+			t.Errorf("%d. expected %#v got %#v", i, tt.connParams, connParams)
+		}
+	}

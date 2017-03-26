@@ -9,14 +9,17 @@ import (
 
 // IndexRequest container.
 // The URL is the url to index content from.
-type IndexRequest struct {
-	URL string `json:"url"`
-}
+//type IndexRequest struct {
+//	URL string `json:"url"`
+//}
 
 const (
-	// IndexRequestJob queue name52415697
-	IndexRequestJob = "IndexRequests"
+	QueueName = "benchmarkQueue"
 )
+
+type QueueMessage struct {
+	Message string 
+}
 
 func Setup(dbURL string) (*pgx.ConnPool, *que.Client, error) {
 	pgxpool, err := GetPgxPool(dbURL)
